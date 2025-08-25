@@ -481,13 +481,14 @@ sub clone_image {
 }
 
 sub list_images {
-    my ($class, $storeid, $scfg) = @_;
+    my ($class, $storeid, $scfg, $vmid) = @_;
 
     my $lvols = _lvols_by_pool($scfg, $scfg->{pool});
     my $res = [];
 
     foreach (@$lvols) {
         next if $_->{lvol_name} !~ m/^vm-(\d+)-/;
+        next if (defined $vmid) && ($1 == $vmid);
 
         push @$res, {
             volid => "$storeid:$_->{lvol_name}",
